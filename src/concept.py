@@ -24,7 +24,7 @@ def phism_shaker(num_beans, shell_freq, shell_reso, sound_decay, system_decay, s
       temp += (np.pi * 2) / SAMPLE_RATE / (shake_time / 1000)
       shake_energy += 1 - np.cos(temp)
 
-    # Shake 4 times per second
+    # Shake X times per second
     if i % (SAMPLE_RATE / shakes_pr_sec) == 0:
       temp = 0
 
