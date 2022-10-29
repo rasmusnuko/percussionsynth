@@ -1,9 +1,7 @@
 import numpy as np
 from scipy.io.wavfile import write
 
-SAMPLE_RATE = 22050
-DURATION = 4
-
+SAMPLE_RATE = 44100
 
 def phism_shaker(num_beans, shell_freq, shell_reso, sound_decay, system_decay, shake_time, shakes_pr_sec = 4, duration = 4, filename = "shaker"):
   temp, shake_energy, sound_level = 0, 0, 0
@@ -65,7 +63,7 @@ if __name__ == '__main__':
                50,      # shake time (millis)
                4,       # shakes per second
                4,       # duration of audio clip (seconds)
-               "perry_shaker")
+               "perryshaker")
 
 
   # High shaker  
@@ -77,4 +75,4 @@ if __name__ == '__main__':
                25,      # shake time (millis)
                6,       # shakes per second
                4,       # duration of audio clip (seconds)
-               "high_shaker")
+               "highshaker")
