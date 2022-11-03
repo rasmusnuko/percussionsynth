@@ -25,7 +25,7 @@ def phism_shaker(conf):
 
   print(f"Rendering {conf['filename']}.wav")
 
-  # Gourd qnance filter
+  # Gourd resonance filter
   filters = get_filters(conf['filters'])
 
   # Init buf
@@ -54,7 +54,7 @@ def phism_shaker(conf):
     # Calculate an expontial decay of sound
     sound_level *= conf['sound decay']
 
-    # Gourd qnance filter
+    # Gourd resonance filters
     for filt in filters:
       buf[0] = buf[0] + filt['f'] * ( input - buf[0] + filt['fb'] * (buf[0] - buf[1]) )
       buf[1] = buf[1] + filt['f'] * (buf[0] - buf[1])
