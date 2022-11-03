@@ -52,8 +52,10 @@ def phism_shaker(conf):
     sound_level *= conf['sound decay']
 
     # Zeros at 0 or both (0 and 0.5*SAMPLE_RATE)
+    # 'zero' = y[n] = x[n] - x[n - 1]
     if 'zero' in conf['zeros']:
       input -= at_zero
+    # 'both' = y[n] = x[n] - x[n - 2]
     elif 'both' in conf['zeros']:
       input -= at_both 
 
