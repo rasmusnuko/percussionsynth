@@ -3,11 +3,11 @@ from concept import phism_shaker
 if __name__ == '__main__':
   # Maraca
   maraca_conf = { 'num beans': 32,
-                  'prob': 4,
+                  'prob': 32,
                   'system decay': 0.999,
                   'sound decay': 0.95,
                   'zeros': [-1],
-                  'filters': [{'freq': 3000, 'q': 0.96}],
+                  'filters': [{'freq': 4200, 'q': 0.96}],
                   'shake time': 50,
                   'filename': 'maraca'}
   phism_shaker(maraca_conf)
@@ -47,18 +47,17 @@ if __name__ == '__main__':
   phism_shaker(guiro_conf)
 
   # Tambourine
-  # THIS GIVES AN 'f' VALUE > 1, FOR THE 8100 HZ FILTER
-  #tambou_conf = { 'num beans': 32,
-  #                'prob': 32,
-  #                'system decay': 0.9985,
-  #                'sound decay': 0.95,
-  #                'zeros': [1, -1],
-  #                'filters': [{'freq': 2300, 'q': 0.96},
-  #                            {'freq': 5600, 'q': 0.995},
-  #                            {'freq': 8100, 'q': 0.995}],
-  #                'shake time': 33,
-  #                'filename': 'tambourine'}
-  #phism_shaker(tambou_conf)
+  # tambou_conf = { 'num beans': 32,
+  #                 'prob': 32,
+  #                 'system decay': 0.9985,
+  #                 'sound decay': 0.95,
+  #                 'zeros': [1, -1],
+  #                 'filters': [{'freq': 2300, 'q': 0.96},
+  #                             {'freq': 5600, 'q': 0.995},
+  #                             {'freq': 8100, 'q': 0.995}],
+  #                 'shake time': 33,
+  #                 'filename': 'tambourine'}
+  # phism_shaker(tambou_conf)
 
   # Sleighbells
   sleigh_conf = { 'num beans': 32,
