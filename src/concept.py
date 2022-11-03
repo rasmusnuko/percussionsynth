@@ -3,76 +3,114 @@ from scipy.io.wavfile import write
 
 SAMPLE_RATE = 44100
 
-def phism_shaker(num_beans, shell_freq, shell_reso, sound_decay, system_decay, shake_time, shakes_pr_sec = 4, duration = 4, filename = "shaker"):
+# https://www.musicdsp.org/en/latest/Filters/29-resonant-filter.html
+def get_filters(shells):
+  filters = []
+  for shell in shells:
+    f  = 2 * np.sin(np.pi * shell['freq'] / SAMPLE_RATE)
+    fb = shell['reso'] + shell['reso']/(1-f)
+
+    filt = {'f': f, 'fb': fb}
+
+    filters.append(filt)
+
+  return filters
+
+
+def phism_shaker(conf):
+
+  # Init
   temp, shake_energy, sound_level = 0, 0, 0
-  
-  gain = np.log(num_beans) / np.log(4) * 40 / num_beans
+  gain = np.log(conf['num beans']) / np.log(4) * 40 / conf['num beans']
 
   # Gourd resonance filter
-  coeffs = [0, 0]
-  coeffs[0] = -shell_reso * 2 * np.cos(shell_freq * (np.pi * 2) / SAMPLE_RATE)
-  coeffs[1] = shell_reso * shell_reso
+  filters = get_filters(conf['shells'])
 
   # Init output
   output = [0, 0]
   result = []
-  for i in range(duration * SAMPLE_RATE):
+  bp = 0
+  for i in range(4 * SAMPLE_RATE):          # 4 second audio clip
     # Shake for X ms -> add shake energy
     if temp < (np.pi * 2):
-      temp += (np.pi * 2) / SAMPLE_RATE / (shake_time / 1000)
+      temp += (np.pi * 2) / SAMPLE_RATE / (conf['shake time'] / 1000)
       shake_energy += 1 - np.cos(temp)
 
-    # Shake X times per second
-    if i % (SAMPLE_RATE / shakes_pr_sec) == 0:
+    # Shake 4 times per second
+    if i % (SAMPLE_RATE / 4) == 0:
       temp = 0
 
     # Exponential system decay
-    shake_energy *= system_decay
+    shake_energy *= conf['system decay']
 
-    # Model collision
-    if np.random.randint(1024) < num_beans:
+    # Collisions adds energy
+    if np.random.randint(conf['prob']) == 0:
       sound_level += gain * shake_energy
 
     input = sound_level * np.random.random() * 2 - 1
       
-    # Expontial decay of sound
-    sound_level *= sound_decay
+    # Calculate an expontial decay of sound
+    sound_level *= conf['sound decay']
 
     # Gourd resonance filter
-    input -= output[0]*coeffs[0]
-    input -= output[1]*coeffs[1]
-    output[1] = output[0]
-    output[0] = input
+    for filt in filters:
+      hp = input - output[0]
+      bp = output[0] - output[1]
+      output[0] = output[0] + filt['f'] * (hp + filt['fb'] * bp)
+      output[1] = output[1] + filt['f'] * (output[0] - output[1])
 
-    data = output[0] - output[1]
+    data = bp
 
     result.append(data)
 
   scaled = np.int16(result / np.max(np.abs(result)) * 32767)
-  write(f"{filename}.wav", SAMPLE_RATE, scaled)
+  write(f"{conf['filename']}.wav", SAMPLE_RATE, scaled)
 
 
 
 if __name__ == '__main__':
   # Perry's shaker
-  phism_shaker(64,      # number of beans
-               3400,    # shell frequency (Hz)
-               0.95,    # shell resonance (0 - 1)
-               0.95,    # sound decay   (0 - 1)
-               0.96,    # system decay  (0 - 1)
-               50,      # shake time (millis)
-               4,       # shakes per second
-               4,       # duration of audio clip (seconds)
-               "perryshaker")
+  perry_shells = [ {'reso': 0.96, 'freq': 4200} ]
+
+  perry_config = {'num beans': 32,
+                  'prob': 4,
+                  'shells' : perry_shells,
+                  'system decay': 0.999,
+                  'sound decay': 0.95,
+                  'shake time': 50,
+                  'filename': "perryshaker"}
+
+  phism_shaker(perry_config)
 
 
   # High shaker  
-  phism_shaker(80,      # number of beans
-               6200,    # shell frequency (Hz)
-               0.95,    # shell resonance (0 - 1)
-               0.95,    # sound decay   (0 - 1)
-               0.92,    # system decay  (0 - 1)
-               25,      # shake time (millis)
-               6,       # shakes per second
-               4,       # duration of audio clip (seconds)
-               "highshaker")
+  high_shells = [ {'reso': 0.95, 'freq': 6200} ]
+
+  high_config = {'num beans': 80,
+                 'prob': 32,
+                 'shells' : high_shells,
+                 'system decay': 0.92,
+                 'sound decay': 0.95,
+                 'shake time': 25,
+                 'filename': "highshaker"}
+
+  phism_shaker(high_config)
+
+
+  # Water drops
+  water_shells = [ { 'freq': 450, 'reso': 0.9985},
+                   { 'freq': 600, 'reso': 0.9985},
+                   { 'freq': 750, 'reso': 0.9985} ]
+
+
+  water_config = {'num beans': 80,
+                  'prob': 8192,
+                  'shells' : water_shells,
+                  'system decay': 0.999,
+                  'sound decay': 0.95,
+                  'shake time': 25,
+                  'filename': "water_drops"}
+
+  phism_shaker(water_config)
+
+
