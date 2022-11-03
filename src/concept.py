@@ -18,7 +18,6 @@ def get_filters(shells):
 
 
 def phism_shaker(conf):
-
   # Init
   temp, shake_energy, sound_level = 0, 0, 0
   gain = np.log(conf['num beans']) / np.log(4) * 40 / conf['num beans']
@@ -33,7 +32,7 @@ def phism_shaker(conf):
   for i in range(4 * SAMPLE_RATE):          # 4 second audio clip
     # Shake for X ms -> add shake energy
     if temp < (np.pi * 2):
-      temp += (np.pi * 2) / SAMPLE_RATE / (conf['shake time'] / 1000)
+      temp += (np.pi * 2) / SAMPLE_RATE / (shake_time / 1000)
       shake_energy += 1 - np.cos(temp)
 
     # Shake 4 times per second
@@ -67,7 +66,6 @@ def phism_shaker(conf):
   write(f"{conf['filename']}.wav", SAMPLE_RATE, scaled)
 
 
-
 if __name__ == '__main__':
   # Perry's shaker
   perry_shells = [ {'reso': 0.96, 'freq': 4200} ]
@@ -81,36 +79,3 @@ if __name__ == '__main__':
                   'filename': "perryshaker"}
 
   phism_shaker(perry_config)
-
-
-  # High shaker  
-  high_shells = [ {'reso': 0.95, 'freq': 6200} ]
-
-  high_config = {'num beans': 80,
-                 'prob': 32,
-                 'shells' : high_shells,
-                 'system decay': 0.92,
-                 'sound decay': 0.95,
-                 'shake time': 25,
-                 'filename': "highshaker"}
-
-  phism_shaker(high_config)
-
-
-  # Water drops
-  water_shells = [ { 'freq': 450, 'reso': 0.9985},
-                   { 'freq': 600, 'reso': 0.9985},
-                   { 'freq': 750, 'reso': 0.9985} ]
-
-
-  water_config = {'num beans': 80,
-                  'prob': 8192,
-                  'shells' : water_shells,
-                  'system decay': 0.999,
-                  'sound decay': 0.95,
-                  'shake time': 25,
-                  'filename': "water_drops"}
-
-  phism_shaker(water_config)
-
-
