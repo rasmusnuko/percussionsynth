@@ -13,8 +13,6 @@ def get_filters(input_filters):
 
     filters.append({'f': f, 'fb': fb})
 
-  print(filters)
-
   return filters
 
 
@@ -53,7 +51,7 @@ def phism_shaker(conf):
     # Calculate an expontial decay of sound
     sound_level *= conf['sound decay']
 
-    # Zeros at zero or both
+    # Zeros at 0 or both (0 and 0.5*SAMPLE_RATE)
     if 'zero' in conf['zeros']:
       input -= at_zero
     elif 'both' in conf['zeros']:

@@ -6,7 +6,7 @@ if __name__ == '__main__':
                   'prob': 32,
                   'system decay': 0.999,
                   'sound decay': 0.95,
-                  'zeros': [-1],
+                  'zeros': ['zero'],
                   'filters': [{'freq': 4200, 'q': 0.96}],
                   'shake time': 50,
                   'filename': 'maraca'}
@@ -17,7 +17,7 @@ if __name__ == '__main__':
                   'prob': 16,
                   'system decay': 0.999,
                   'sound decay': 0.96,
-                  'zeros': [1, -1],
+                  'zeros': ['both'],
                   'filters': [{'freq': 5500, 'q': 0.6}],
                   'shake time': 30,
                   'filename': 'sekere'}
@@ -28,7 +28,7 @@ if __name__ == '__main__':
                   'prob': 2,
                   'system decay': 0.997,
                   'sound decay': 0.95,
-                  'zeros': [-1],
+                  'zeros': ['zero'],
                   'filters': [{'freq': 3000, 'q': 0.7}],
                   'shake time': 50,
                   'filename': 'cabasa'}
@@ -39,7 +39,7 @@ if __name__ == '__main__':
                   'prob': 8,
                   'system decay': 0.997,
                   'sound decay': 0.95,
-                  'zeros': [1, -1],
+                  'zeros': ['both'],
                   'filters': [{'freq': 2500, 'q': 0.97},
                               {'freq': 4000, 'q': 0.97}],
                   'shake time': 25,
@@ -47,24 +47,24 @@ if __name__ == '__main__':
   phism_shaker(guiro_conf)
 
   # Tambourine
-  tambou_conf = { 'num beans': 32,
-                  'prob': 32,
-                  'system decay': 0.9985,
-                  'sound decay': 0.95,
-                  'zeros': [1, -1],
-                  'filters': [{'freq': 2300, 'q': 0.96},
-                             {'freq': 5600, 'q': 0.995},
-                              {'freq': 8100, 'q': 0.995}],
-                  'shake time': 33,
-                  'filename': 'tambourine'}
-  phism_shaker(tambou_conf)
+  #tambou_conf = { 'num beans': 32,
+  #                'prob': 32,
+  #                'system decay': 0.9985,
+  #                'sound decay': 0.95,
+  #                'zeros': ['both'],
+  #                'filters': [{'freq': 2300, 'q': 0.96},
+  #                           {'freq': 5600, 'q': 0.995},
+  #                            {'freq': 8100, 'q': 0.995}],
+  #                'shake time': 33,
+  #                'filename': 'tambourine'}
+  #phism_shaker(tambou_conf)
 
   # Sleighbells
   sleigh_conf = { 'num beans': 32,
                   'prob': 32,
                   'system decay': 0.9994,
                   'sound decay': 0.97,
-                  'zeros': [1, -1],
+                  'zeros': ['both'],
                   'filters': [{'freq': 2500, 'q': 0.999},
                               {'freq': 5300, 'q': 0.999},
                               {'freq': 6500, 'q': 0.999},
@@ -79,7 +79,7 @@ if __name__ == '__main__':
                   'prob': 8192,
                   'system decay': 0.999,
                   'sound decay': 0.95,
-                  'zeros': [1, -1],
+                  'zeros': ['both'],
                   'filters': [{'freq': 400, 'q': 0.9985},
                               {'freq': 600, 'q': 0.9985},
                               {'freq': 750, 'q': 0.9985}],
