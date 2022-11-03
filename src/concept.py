@@ -23,15 +23,14 @@ def phism_shaker(conf):
   temp, shake_energy, sound_level = 0, 0, 0
   gain = np.log(conf['num beans']) / np.log(4) * 40 / conf['num beans']
 
-  print(f"Rendering {conf['filename']}.wav")
-
   # Gourd resonance filter
   filters = get_filters(conf['filters'])
 
   # Init buf
   buf = [0, 0]
   result = []
-  prev_input = 0
+  at_zero = 0
+  at_both = 0
   for i in range(4 * SAMPLE_RATE):          # 4 second audio clip
     # Shake for X ms -> add shake energy
     if temp < (np.pi * 2):
@@ -54,22 +53,27 @@ def phism_shaker(conf):
     # Calculate an expontial decay of sound
     sound_level *= conf['sound decay']
 
+    # Zeros at zero or both
+    if 'zero' in conf['zeros']:
+      input -= at_zero
+    elif 'both' in conf['zeros']:
+      input -= at_both 
+
+    # at_zero is a 1-sample delay, at_both is a 2-sample delay.
+    at_zero = input
+    at_both = at_zero
+
     # Gourd resonance filters
     for filt in filters:
-      buf[0] = buf[0] + filt['f'] * ( input - buf[0] + filt['fb'] * (buf[0] - buf[1]) )
+      buf[0] = buf[0] + filt['f'] * (input - buf[0] + filt['fb'] * (buf[0] - buf[1]))
       buf[1] = buf[1] + filt['f'] * (buf[0] - buf[1])
 
     data = buf[0] - buf[1]
 
-    # Zeros at either 0Hz or 1/2 SAMPLE_RATE Hz 
-    for zero in conf['zeros']:
-      data += zero * prev_input
-
-    prev_input = input
-
     result.append(data)
 
   scaled = np.int16(result / np.max(np.abs(result)) * 32767)
+  print(f"Rendering {conf['filename']}.wav")
   write(f"{conf['filename']}.wav", SAMPLE_RATE, scaled)
 
 
