@@ -57,8 +57,12 @@ class Shaker:
       print(self.gain)
     self.gain =( 2**14.8 ) / self.gain
 
-# GLOBAL SHAKER OBJECT
+
+'''
+GLOBAL SHAKER OBJECT
+'''
 s = Shaker()
+
 
 '''
 CALLBACK FUNCTION FOR SHAKER AUDIO
@@ -94,27 +98,9 @@ def callback(in_data, frame_count, time_info, flag):
       s.buf[1] = s.buf[1] + filt['f'] * (s.buf[0] - s.buf[1])
       this_sample += s.buf[0] - s.buf[1]
 
-    # # # # Zeros at 0 or both (0 and Nyquist)
-    # # # if 'zero' in s.conf['zeros']:
-    # # #   this_sample -= s.at_zero
-    # # # elif 'both' in s.conf['zeros']:
-    # # #   this_sample -= s.at_both 
-
-    # # # # at_zero is a 1-sample delay, at_both is a 2-sample delay.
-    # # # s.at_both = s.at_zero
-    # # # s.at_zero = this_sample
-
     # Add sample to buffer
     data[i] = this_sample * s.gain
   
-  # TODO not scaled, find some gain that works
-  # for amount of 'energy' measured with IMU
-
-  # IDEA: cap 'energy' to 1:
-  # IMU energy * random number (-1 - 1) * max_int_16bit will be of correct size(?) 
-
-  # Map IMU 0 to (reasonably high IMU velocity) -> -1 to 1
-
   if DEBUG and s.max < np.max(np.abs(data)):
     s.max = np.max(np.abs(data))
     print(s.max)
@@ -122,8 +108,9 @@ def callback(in_data, frame_count, time_info, flag):
   return (data, pyaudio.paContinue)
 
 
-
-
+'''
+Open pyaudio, runs on audio thread
+'''
 def open_pyaudio(stream):
   stream.start_stream()
   while stream.is_active():
