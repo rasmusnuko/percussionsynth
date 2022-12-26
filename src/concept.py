@@ -64,9 +64,13 @@ def phism_shaker(conf):
     at_both = at_zero
 
     # Gourd resonance filters
+    this_sample = 0
     for filt in filters:
       buf[0] = buf[0] + filt['f'] * (input - buf[0] + filt['fb'] * (buf[0] - buf[1]))
       buf[1] = buf[1] + filt['f'] * (buf[0] - buf[1])
+      this_sample += buf[0] - buf[1]
+
+    this_sample /= len(filters)
 
     data = buf[0] - buf[1]
 
@@ -83,7 +87,8 @@ if __name__ == '__main__':
 
   perry_config = {'num beans': 32,
                   'prob': 4,
-                  'shells' : perry_shells,
+                  'filters' : perry_shells,
+                  'zeros' : [],
                   'system decay': 0.999,
                   'sound decay': 0.95,
                   'shake time': 50,
