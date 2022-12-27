@@ -2,7 +2,7 @@ import threading, sys, tty, time, random
 import numpy as np
 import pyaudio
 
-DEBUG = True
+DEBUG = False
 
 ### AUDIO VARS
 SAMPLE_RATE = 44100
@@ -14,25 +14,26 @@ class Shaker:
   def __init__(self):
     self.max = 0
 
-    ### SHAKER CONFIG
-    ## TODO make config loader
-
-    self.shells  =[{'freq': 5500, 'q': 0.6}]
-    self.conf = { 'num beans': 32,
-                  'prob': 1 / 16,
-                  'system decay': 0.999,
-                  'sound decay': 0.96,
-                  'shells': self.shells,
-                  'zeros': ['both'],
-                  'shake time': 30e-3,
-                  'filename': 'sekere'}
+    self.shells = [{'freq': 2500, 'q': 0.999},
+                   {'freq': 5300, 'q': 0.999},
+                   {'freq': 6500, 'q': 0.999},
+                   {'freq': 8300, 'q': 0.999},
+                   {'freq': 9800, 'q': 0.999}]
+    self.conf   = { 'num beans': 32,
+                    'prob': 32,
+                    'system decay': 0.9994,
+                    'shells': self.shells,
+                    'sound decay': 0.97,
+                    'zeros': ['both'],
+                    'shake time': 60e-3,
+                    'filename': 'sleighbells'}
 
     ### BANDPASS FILTER VARIABLES
     self.buf = [0, 0]
     self.filters = []
     for filt in self.conf['shells']:
       f  = 2 * np.sin(np.pi * (filt['freq'] / SAMPLE_RATE))
-      fb = filt['q'] + (filt['q']/(1-f))
+      fb = filt['q'] + (filt['q'] / (1-f))
       self.filters.append({'f': f, 'fb': fb})
 
     ### INIT VARIABLES
@@ -55,7 +56,7 @@ class Shaker:
     # we find the inverse, st we can normalize output
     if DEBUG:
       print(self.gain)
-    self.gain =( 2**14.8 ) / self.gain
+    self.gain =( 2 ** (14 - len(self.filters)) ) / self.gain
 
 
 '''
@@ -82,7 +83,7 @@ def callback(in_data, frame_count, time_info, flag):
     s.shake_energy *= s.conf['system decay']
 
     # Bean collision adds energy
-    if random.random() <= s.conf['prob']:
+    if random.random() <= 1 / s.conf['prob']:
       s.sound_level += s.shake_energy
 
     # Noise generator
@@ -91,7 +92,7 @@ def callback(in_data, frame_count, time_info, flag):
     # Calculate an expontial decay of sound
     s.sound_level *= s.conf['sound decay']
 
-    # Gourd resonance filters
+    # gourd resonance filters
     this_sample = 0
     for filt in s.filters:
       s.buf[0] = s.buf[0] + filt['f'] * (input - s.buf[0] + filt['fb'] * (s.buf[0] - s.buf[1]))
@@ -135,15 +136,22 @@ if __name__ == '__main__':
 
   # Register key presses
   tty.setcbreak(sys.stdin)  
-  print("press 'a' to shake")
+  print("press space to shake")
   print("press 'q' to quit")
+  print("_____________Tweaks____________")
+  print("press 'w' to higher probability")
+  print("press 's' to lower probability")
   while True:
     ## Table of key codes  https://www.asciitable.com/
     key = ord(sys.stdin.read(1))  # key captures the key-code 
-    if key == 97:
+    if key == 32:
       s.value = 0
-      if DEBUG:
-        print(f"s.value: {s.value}")
+    if key == 119 and s.conf['prob'] > 1:
+      s.conf['prob'] -= 1
+      print(f'Probability: 1/{s.conf["prob"]}')
+    if key == 115:
+      s.conf['prob'] += 1
+      print(f'Probability: 1/{s.conf["prob"]}')
 
     if key == 113:
       print("Quitting...")

@@ -64,17 +64,12 @@ def phism_shaker(conf):
     at_both = at_zero
 
     # Gourd resonance filters
-    this_sample = 0
     for filt in filters:
       buf[0] = buf[0] + filt['f'] * (input - buf[0] + filt['fb'] * (buf[0] - buf[1]))
       buf[1] = buf[1] + filt['f'] * (buf[0] - buf[1])
-      this_sample += buf[0] - buf[1]
+      input = buf[0] - buf[1]
 
-    this_sample /= len(filters)
-
-    data = buf[0] - buf[1]
-
-    result.append(data)
+    result.append(input)
 
   scaled = np.int16(result / np.max(np.abs(result)) * 32767)
   print(f"Rendering {conf['filename']}.wav")

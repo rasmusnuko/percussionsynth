@@ -8,7 +8,7 @@ if __name__ == '__main__':
                   'sound decay': 0.95,
                   'zeros': ['zero'],
                   'filters': [{'freq': 4200, 'q': 0.96}],
-                  'shake time': 50,
+                  'shake time': 50e-3,
                   'filename': 'maraca'}
   phism_shaker(maraca_conf)
 
@@ -19,7 +19,7 @@ if __name__ == '__main__':
                   'sound decay': 0.96,
                   'zeros': ['both'],
                   'filters': [{'freq': 5500, 'q': 0.6}],
-                  'shake time': 30,
+                  'shake time': 30e-3,
                   'filename': 'sekere'}
   phism_shaker(sekere_conf)
 
@@ -30,7 +30,7 @@ if __name__ == '__main__':
                   'sound decay': 0.95,
                   'zeros': ['zero'],
                   'filters': [{'freq': 3000, 'q': 0.7}],
-                  'shake time': 50,
+                  'shake time': 50e-3,
                   'filename': 'cabasa'}
   phism_shaker(cabasa_conf)
 
@@ -42,7 +42,7 @@ if __name__ == '__main__':
                   'zeros': ['both'],
                   'filters': [{'freq': 2500, 'q': 0.97},
                               {'freq': 4000, 'q': 0.97}],
-                  'shake time': 25,
+                  'shake time': 25e-3,
                   'filename': 'guiro'}
   phism_shaker(guiro_conf)
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
   #                'filters': [{'freq': 2300, 'q': 0.96},
   #                           {'freq': 5600, 'q': 0.995},
   #                            {'freq': 8100, 'q': 0.995}],
-  #                'shake time': 33,
+  #                'shake time': 33e-3,
   #                'filename': 'tambourine'}
   #phism_shaker(tambou_conf)
 
@@ -70,7 +70,7 @@ if __name__ == '__main__':
                               {'freq': 6500, 'q': 0.999},
                               {'freq': 8300, 'q': 0.999},
                               {'freq': 9800, 'q': 0.999}],
-                  'shake time': 60,
+                  'shake time': 60e-3,
                   'filename': 'sleighbells'}
   phism_shaker(sleigh_conf)
 
@@ -83,7 +83,7 @@ if __name__ == '__main__':
                   'filters': [{'freq': 400, 'q': 0.9985},
                               {'freq': 600, 'q': 0.9985},
                               {'freq': 750, 'q': 0.9985}],
-                  'shake time': 5,
+                  'shake time': 5e-3,
                   'filename': 'waterdrops'}
   phism_shaker(water_conf)
 
@@ -96,7 +96,7 @@ if __name__ == '__main__':
                   'filters': [{'freq': 2200, 'q': 0.995},
                               {'freq': 2800, 'q': 0.995},
                               {'freq': 3400, 'q': 0.995}],
-                  'shake time': 1,
+                  'shake time': 1e-3,
                   'filename': 'bamboowindchimes'}
   phism_shaker(bamboo_conf)
 
