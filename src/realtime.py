@@ -19,6 +19,7 @@ class Shaker:
                    {'freq': 6500, 'q': 0.999},
                    {'freq': 8300, 'q': 0.999},
                    {'freq': 9800, 'q': 0.999}]
+
     self.conf   = { 'num beans': 32,
                     'prob': 32,
                     'system decay': 0.9994,
