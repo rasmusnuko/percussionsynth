@@ -17,21 +17,6 @@ class Shaker:
 
     self.conf = conf
     
-#    self.shells = [{'freq': 2500, 'q': 0.999},
-#                   {'freq': 5300, 'q': 0.999},
-#                   {'freq': 6500, 'q': 0.999},
-#                   {'freq': 8300, 'q': 0.999},
-#                   {'freq': 9800, 'q': 0.999}]
-#
-#    self.conf   = { 'num beans': 32,
-#                    'prob': 32,
-#                    'system decay': 0.9994,
-#                    'shells': self.shells,
-#                    'sound decay': 0.97,
-#                    'zeros': ['both'],
-#                    'shake time': 60e-3,
-#                    'filename': 'sleighbells'}
-
     ### BANDPASS FILTER VARIABLES
     self.buf = [0, 0]
     self.filters = []
@@ -39,7 +24,8 @@ class Shaker:
       f  = 2 * np.sin(np.pi * (filt['freq'] / SAMPLE_RATE))
       fb = filt['q'] + (filt['q'] / (1-f))
       self.filters.append({'f': f, 'fb': fb})
-    ### INIT VARIABLES
+
+    ### INIT ENVELOPE VARIABLES
     self.shake_energy = 0
     self.sound_level = 0
 
@@ -50,13 +36,14 @@ class Shaker:
     self.value = 0
     self.increment = (np.pi*2) / SAMPLE_RATE / self.conf['shake time']
 
-    # Calculate what shake energy will end at, to normalize output
+    # (Kinda) Calculate what shake energy will end at, to normalize output
     self.gain = 0
     while self.value < (2 * np.pi):
         self.value += self.increment
         self.gain += 1 - np.cos(self.value)
-    # gain is now the max shake energy will reach,
-    # we find the inverse, st we can normalize output
+    # idea was to find max shake energy will reach,
+    # we find the inverse, st. we can normalize output
+    # THIS DOES NOT TAKE SOUND DECAY INTO ACCOUNT, (still kinda works)
     if DEBUG:
       print(self.gain)
     self.gain = (2 ** (14 - len(self.filters))) / self.gain
