@@ -1,0 +1,3 @@
+pip numpy
+pip pyaudio
+pip tty
