@@ -84,5 +84,5 @@ plt.show()
 # Plot audio
 plt.plot(sleighbells_audio)
 plt.xlabel('samples')
-plt.ylabel('Amplitude of sleighbells audio signal')
+plt.ylabel('Amplitude of maraca audio signal')
 plt.show()
